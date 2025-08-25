@@ -1,0 +1,7 @@
+{
+  "name": "lectio-schedule-extrator",
+  "dependencies": {
+    "@vercel/edge": "^1.2.2",
+    "@vercel/node": "^5.3.13"
+  }
+}
