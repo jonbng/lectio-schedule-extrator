@@ -49,6 +49,12 @@ function readCookie(req: Request): string | null {
   return raw ?? null;
 }
 
+function readSessionCookie(req: Request): string | null {
+  const raw = req.headers.get("x-lectio-session");
+  console.log("x-lectio-session", raw);
+  return raw ?? null;
+}
+
 /** Simple stable hash (FNV-1a) for small payloads */
 function hash(str: string): string {
   let h = 0x811c9dc5;
@@ -115,6 +121,7 @@ export async function GET(req: Request): Promise<Response> {
     const week = url.searchParams.get("week"); // optional ISO week number
     const gymId = url.searchParams.get("gymId");
     const cookie = readCookie(req);
+    const sessionCookieRaw = readSessionCookie(req);
     if (!cookie) {
       return json(
         {
@@ -129,23 +136,39 @@ export async function GET(req: Request): Promise<Response> {
       return json({ error: "Missing gymId." }, 400);
     }
 
+    // If we have the session cookie, we also set the session cookie
+    const sessionCookie = sessionCookieRaw
+      ? `; ASP.NET_SessionId=${sessionCookieRaw}; isloggedin3=Y`
+      : "";
+
     // Build target URL and fetch
     const target = buildLectioUrl(week, gymId);
     const resp = await fetch(target, {
       method: "GET",
       headers: {
         // Be a polite client
-        Cookie: `autologinkeyV2=${cookie};`,
-        cookies: `autologinkeyV2=${cookie};`,
-        "x-lectio-cookie": cookie,
-        "x-lectio-cookie-header": cookie,
         "user-agent":
-          "Mozilla/5.0 (compatible; LectioEdge/1.0; +https://example.com)",
-        accept: "text/html,application/xhtml+xml",
+          "Mozilla/5.0 (X11; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.5",
+        Connection: "keep-alive",
+        "Sec-GPC": "1",
+        DNT: "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+        TE: "trailers",
+        Cookie: `autologinkeyV2=${cookie};${sessionCookie}`,
       },
       // Tight timeouts via fetch options are limited in edge; rely on platform limits.
       redirect: "follow",
     });
+
+    console.log("resp", resp.headers);
 
     // Handle auth redirect or errors
     if (resp.status === 302 || resp.status === 301) {
@@ -160,8 +183,13 @@ export async function GET(req: Request): Promise<Response> {
     console.log("html", html);
 
     // Quick auth check: Lectio login marker (adjust to real marker you see)
-    if (/unilogin|MitID|log\s*ind/i.test(html)) {
+    if (/unilogin|log\s*ind/i.test(html)) {
       return json({ error: "Session expired." }, 401);
+    }
+
+    // Check for robot detection
+    if (/robot|captcha|anti-bot|bot-protection/i.test(html)) {
+      return json({ error: "Robot detection." }, 403);
     }
 
     const tz = "Europe/Copenhagen";
@@ -199,6 +227,7 @@ export async function GET(req: Request): Promise<Response> {
   } catch (err: any) {
     // Don't leak internals, but provide helpful info for common issues
     const message = String(err?.message ?? "");
+    console.error("error", err);
     if (
       message.includes("invalid header") ||
       message.includes("Headers.append")
