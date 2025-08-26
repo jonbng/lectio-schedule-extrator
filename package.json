@@ -1,7 +1,11 @@
 {
   "name": "lectio-schedule-extrator",
+  "type": "module",
   "dependencies": {
     "@vercel/edge": "^1.2.2",
     "@vercel/node": "^5.3.13"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
   }
 }
