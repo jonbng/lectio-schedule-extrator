@@ -1,0 +1,172 @@
+
+📅 LECTIO SCHEDULE EXTRACTION
+═══════════════════════════════════════════════════════
+
+👤 Student: Eleven Jonathan Arthur Hojer Bangert
+🏫 Class: 1g3
+🎓 School: Sorø Akademis Skole
+📅 Week: 36 (2025)
+📆 Period: Uge 36 (1/9-7/9) 2025
+
+📊 SUMMARY
+────────────────────────────────────────────────────────
+📚 Total Classes: 12
+📝 Homework Assignments: 2
+🔄 Changed Classes: 2
+❌ Cancelled Classes: 1
+🎉 Special Events: 8
+⏰ Deadlines: 1
+
+⏰ MODULES
+────────────────────────────────────────────────────────
+1. 1. modul (8:10 - 9:50)
+2. 2. modul (10:05 - 11:45)
+3. 3. modul (12:25 - 14:05)
+4. 4. modul (14:15 - 15:55)
+5. 5. modul (16:05 - 17:45)
+
+📅 DAILY SCHEDULE
+────────────────────────────────────────────────────────
+
+📚 MANDAG (1/9)
+   ✅ 📖 1g3 ap spr
+      🆔 ABS73519234455
+      👨‍🏫 Jørgen Grønlund (JG)
+      🏠 23
+      ⏰ 08:10 - 09:50
+
+   ✅ 📖 1g3 da
+      🆔 ABS73519230287
+      👨‍🏫 Gitte Bjerreskov Storm (GS)
+      🏠 23
+      ⏰ 10:05 - 11:45
+
+   ✅ 📖 1g3 nv
+      🆔 ABS73519235036
+      👨‍🏫 Jakob Østerberg Meibom (JM)
+      🏠 VC-Thomsen
+      ⏰ 12:25 - 14:05
+
+
+📚 TIRSDAG (2/9)
+   ✅ 📖 1g3 nv
+      🆔 ABS73519232199
+      👨‍🏫 Jakob Østerberg Meibom (JM)
+      🏠 VC-Thomsen
+      ⏰ 08:10 - 09:50
+
+   ✅ 📖 ma-7
+      🆔 ABS73519232168
+      👨‍🏫 Peter Henrik Ørsøe Rasmussen (Pe)
+      🏠 VC-Rømer
+      ⏰ 10:05 - 11:45
+      📝 Homework:
+         • Besvar opgave 3.1 og 3.2 fra forrige gang: regneopgaver ligninger.docx (VINK:  Beslut hvad x skal stå for og opstil en ligning) [...]
+
+   ✅ 📖 1g3 ap la
+      🆔 ABS73519232861
+      👨‍🏫 Allan Rosengren (AR)
+      🏠 23
+      ⏰ 12:25 - 14:05
+
+
+📚 ONSDAG (3/9)
+   ✅ 📖 1g3 en
+      🆔 ABS73519234837
+      👨‍🏫 Anna Bjerre (AB)
+      🏠 23
+      ⏰ 08:10 - 09:50
+
+   🔄 📖 1g3 da
+      🆔 ABS73519233537
+      👨‍🏫 Gitte Bjerreskov Storm (GS)
+      🏠 23
+      ⏰ 10:05 - 11:45
+      📋 Topic: Ændret!
+
+   ❌ 📖 1g3 nv
+      🆔 ABS73519234084
+      👨‍🏫 Martin Just Majlund (MJ)
+      🏠 VC-Thomsen
+      ⏰ 10:05 - 11:45
+      📋 Topic: Aflyst!
+      📌 Note: MJ Astra
+
+   ✅ ⏰ Frist semesterplaner 2-3g
+      👨‍🏫  ()
+
+
+📚 TORSDAG (4/9)
+   ✅ 🎉 Alle 1. G. elever, Alle 2. G. elever, Alle 3. G. elever, Alle Lærere
+      🆔 ABS73526471026
+      👨‍🏫  ()
+      ⏰ 08:00 - 13:00
+      📋 Topic: Idrætsdag
+
+   ✅ 🎉 Idrætsdag
+      👨‍🏫  ()
+
+
+📚 FREDAG (5/9)
+   ✅ 📖 1g3 sa
+      🆔 ABS73519233671
+      👨‍🏫 Poul-Erik Jørgensen (PJ)
+      🏠 23
+      ⏰ 08:10 - 09:50
+      📋 Topic: Sociale klasser
+      📝 Homework:
+         • Vores Samfund 1.udg (Carlsen m.fl), 17-23
+
+   ✅ 📖 1g3 id
+      🆔 ABS73519232335
+      👨‍🏫 Jakob Østerberg Meibom (JM)
+      🏠 HAL
+      ⏰ 10:05 - 11:45
+
+   🔄 📖 ma-7
+      🆔 ABS73519233093
+      👨‍🏫 Peter Henrik Ørsøe Rasmussen (Pe)
+      🏠 AG1
+      ⏰ 12:25 - 14:05
+      📋 Topic: Ændret!
+
+   ✅ 🎉 1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26
+      🆔 ABS74001101852
+      👨‍🏫 Akila Karunenthiran (AK)
+      ⏰ 17:00 - ...
+      📋 Topic: Lukkeweekend  kosten
+
+   ✅ 🎉 Lukkeweekend  kosten
+      👨‍🏫  ()
+
+
+🏖️ LØRDAG (6/9)
+   ✅ 🎉 1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26
+      🆔 ABS74001101852
+      👨‍🏫 Akila Karunenthiran (AK)
+      ⏰ ... - ...
+      📋 Topic: Lukkeweekend  kosten
+
+   ✅ 🎉 Lukkeweekend  kosten
+      👨‍🏫  ()
+
+
+🏖️ SØNDAG (7/9)
+   ✅ 🎉 1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26
+      🆔 ABS74001101852
+      👨‍🏫 Akila Karunenthiran (AK)
+      ⏰ ... - 17:00
+      📋 Topic: Lukkeweekend  kosten
+
+   ✅ 🎉 Lukkeweekend  kosten
+      👨‍🏫  ()
+
+
+📚 SUBJECTS & GROUPS
+────────────────────────────────────────────────────────
+🎯 Subjects: 1g me 1, 1g3 ap la, 1g3 ap spr, 1g3 da, 1g3 en, 1g3 id, 1g3 kt, 1g3 nv, 1g3 sa, 1g3 st ML, ma-7
+👥 Involved Groups: Alle 1. G. elever, Alle 1g3-elever
+🏷️ Own Groups: 1g kostelever 25/26, Alle elever 25/26, alle kostelever 25/26, Ki Kostelever 1g
+
+═══════════════════════════════════════════════════════
+Extracted successfully! 🎉

@@ -1,16 +1,136 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const runtime = "edge";
 
-type Period = {
-  id: string;
-  title: string;
-  room: string;
-  startEpochMs: number;
-  endEpochMs: number;
-};
+// Simple timing utility for debugging performance
+interface TimingRecord {
+  name: string;
+  startTime: number;
+  endTime?: number;
+  duration?: number;
+}
+
+class Timer {
+  private records: TimingRecord[] = [];
+
+  start(name: string): void {
+    this.records.push({
+      name,
+      startTime: performance.now(),
+    });
+  }
+
+  end(name: string): number {
+    const record = this.records.find((r) => r.name === name && !r.endTime);
+    if (record) {
+      record.endTime = performance.now();
+      record.duration = record.endTime - record.startTime;
+      return record.duration;
+    }
+    return 0;
+  }
+
+  getSummary(): string {
+    const completed = this.records.filter((r) => r.duration !== undefined);
+    let summary = "\n🕐 TIMING SUMMARY\n";
+    summary += "═══════════════════════════════════════\n";
+
+    let totalTime = 0;
+    completed.forEach((record) => {
+      const duration = record.duration!;
+      totalTime += duration;
+      summary += `${record.name}: ${duration.toFixed(2)}ms\n`;
+    });
+
+    summary += `──────────────────────────────────────\n`;
+    summary += `Total Time: ${totalTime.toFixed(2)}ms\n`;
+    summary += "═══════════════════════════════════════\n";
+
+    return summary;
+  }
+
+  reset(): void {
+    this.records = [];
+  }
+}
+
+// Full schedule data types (exact same as schedule-extractor.ts)
+interface Teacher {
+  name: string;
+  initials: string;
+  id?: string;
+}
+
+interface Room {
+  name: string;
+}
+
+interface Subject {
+  name: string;
+  code: string;
+  id?: string;
+}
+
+interface Homework {
+  description: string;
+}
+
+interface ScheduleItem {
+  id?: string;
+  activityId?: string;
+  subject: Subject;
+  teacher: Teacher;
+  room: Room;
+  startTime: string;
+  endTime: string;
+  date: string;
+  module: number;
+  status: "normal" | "changed" | "cancelled";
+  homework?: Homework[];
+  notes?: string;
+  title?: string;
+  topic?: string;
+  type: "class" | "event" | "deadline";
+}
+
+interface DaySchedule {
+  date: string;
+  dayName: string;
+  items: ScheduleItem[];
+  isWeekend?: boolean;
+}
+
+interface WeekSchedule {
+  weekNumber: number;
+  year: number;
+  weekRange: string;
+  student: {
+    name: string;
+    class: string;
+  };
+  school: string;
+  days: DaySchedule[];
+  modules: {
+    number: number;
+    name: string;
+    timeRange: string;
+  }[];
+  studentGroups: {
+    subjects: string[];
+    involvedGroups: string[];
+    ownGroups: string[];
+  };
+  summary: {
+    totalClasses: number;
+    totalHomework: number;
+    changedClasses: number;
+    cancelledClasses: number;
+    specialEvents: number;
+    deadlines: number;
+  };
+}
 
 type ScheduleResponse = {
-  periods: Period[];
+  schedule: WeekSchedule;
   nextHash: string;
   updatedAt: number;
 };
@@ -84,45 +204,424 @@ function buildLectioUrl(week: string | null, gymId: string): string {
 }
 
 /**
- * TODO: Implement real parsing for Lectio HTML.
- * Keep it FAST and resilient. Return minimal period info only.
+ * Lightweight Lectio schedule parser for edge runtime
+ * Extracts full schedule using regex patterns without DOM parsing
  */
-function parseLectioSchedule(html: string, tz: string): Period[] {
-  // --- PLACEHOLDER EXAMPLE ---
-  // Replace with your own logic (regexes or a minimal HTML walker)
-  // and map to Period[]. Keep only safe fields.
-  // Throw on empty/unauthorized page patterns (e.g., login redirect).
-  //
-  // Example fake extraction to show structure:
-  const sample: Period[] = [];
-  // If you use regex, guard against catastrophic backtracking and check lengths.
-  // e.g., find blocks that look like a class cell and pull start/end, title, room.
-  // Then convert local times to epoch ms using tz if needed (edge has Intl).
-  //
-  // if (!sample.length) throw new Error('PARSE_ERROR');
-  return sample;
+function parseLectioSchedule(
+  html: string,
+  tz: string,
+  timer: Timer
+): WeekSchedule {
+  try {
+    timer.start("parsing-total");
+
+    // Extract week info
+    timer.start("extract-week-info");
+    const weekInfo = extractWeekInfo(html);
+    timer.end("extract-week-info");
+
+    timer.start("extract-student-info");
+    const studentInfo = extractStudentInfo(html);
+    timer.end("extract-student-info");
+
+    timer.start("extract-school-info");
+    const schoolInfo = extractSchoolInfo(html);
+    timer.end("extract-school-info");
+
+    timer.start("extract-modules");
+    const modules = extractModules(html);
+    timer.end("extract-modules");
+
+    timer.start("extract-days");
+    const days = extractDays(html, weekInfo.year);
+    timer.end("extract-days");
+
+    timer.start("extract-student-groups");
+    const studentGroups = extractStudentGroups(html);
+    timer.end("extract-student-groups");
+
+    timer.start("generate-summary");
+    const summary = generateSummary(days);
+    timer.end("generate-summary");
+
+    timer.end("parsing-total");
+
+    return {
+      weekNumber: weekInfo.weekNumber,
+      year: weekInfo.year,
+      weekRange: weekInfo.weekRange,
+      student: studentInfo,
+      school: schoolInfo,
+      days,
+      modules,
+      studentGroups,
+      summary,
+    };
+  } catch (err) {
+    console.error("Parse error:", err);
+    throw new Error("PARSE_ERROR");
+  }
 }
 
-/** Minimal sanitizer (ensure required fields, drop anything else) */
-function sanitizePeriods(periods: Period[]): Period[] {
-  return periods.map((p) => ({
-    id: String(p.id),
-    title: String(p.title).slice(0, 120),
-    room: String(p.room).slice(0, 40),
-    startEpochMs: Number(p.startEpochMs),
-    endEpochMs: Number(p.endEpochMs),
-  }));
+function extractWeekInfo(html: string) {
+  const weekMatch = html.match(/Uge (\d+) - (\d+)/);
+  const weekNumber = weekMatch ? parseInt(weekMatch[1]) : 0;
+  const year = weekMatch ? parseInt(weekMatch[2]) : new Date().getFullYear();
+
+  const datePickerMatch = html.match(/datePicker_tb[^>]*value='([^']+)'/);
+  const weekRange = datePickerMatch
+    ? datePickerMatch[1]
+    : `Uge ${weekNumber} (${year})`;
+
+  return { weekNumber, year, weekRange };
+}
+
+function extractStudentInfo(html: string) {
+  const titleMatch = html.match(/<title>([^<]+)<\/title>/);
+  if (titleMatch) {
+    const title = titleMatch[1];
+    const match = title.match(/(.+?)\(k\), (.+?) - Skema/);
+    if (match) {
+      return {
+        name: match[1].trim(),
+        class: match[2].trim(),
+      };
+    }
+  }
+  return { name: "", class: "" };
+}
+
+function extractSchoolInfo(html: string): string {
+  const schoolMatch = html.match(
+    /ls-master-header-institution-name[^>]*>([^<]+)</
+  );
+  return schoolMatch ? schoolMatch[1].trim() : "";
+}
+
+function extractModules(html: string) {
+  const modules: { number: number; name: string; timeRange: string }[] = [];
+  const moduleRegex =
+    /s2module-info[^>]*>[\s\S]*?<div[^>]*>([^<]+)<br[^>]*>([^<]+)/g;
+  let match;
+  let moduleNumber = 1;
+
+  while ((match = moduleRegex.exec(html)) !== null) {
+    modules.push({
+      number: moduleNumber++,
+      name: match[1].trim(),
+      timeRange: match[2].trim(),
+    });
+  }
+
+  return modules;
+}
+
+function extractDays(html: string, year: number): DaySchedule[] {
+  const days: DaySchedule[] = [];
+  const dayHeaderRegex = /s2dayHeader[^>]*>[\s\S]*?<td[^>]*>([^<]+)<\/td>/g;
+  const dayColumnRegex = /data-date="([^"]+)"[\s\S]*?<\/td>/g;
+
+  const dayHeaders: string[] = [];
+  let match;
+
+  // Extract day headers
+  while ((match = dayHeaderRegex.exec(html)) !== null) {
+    const dayText = match[1].trim();
+    if (dayText && !dayText.includes("Modul")) {
+      dayHeaders.push(dayText);
+    }
+  }
+
+  // Process each day
+  for (let i = 0; i < dayHeaders.length; i++) {
+    const dayText = dayHeaders[i];
+    const dateMatch = dayText.match(/(\w+) \((\d+\/\d+)\)/);
+
+    if (dateMatch) {
+      let dayName = dateMatch[1];
+      const date = dateMatch[2];
+
+      // Fix truncated weekend names
+      if (dayName === "rdag") dayName = "Lørdag";
+      if (dayName === "ndag") dayName = "Søndag";
+
+      const items = extractDayItems(html, date, year);
+      const isWeekend = dayName === "Lørdag" || dayName === "Søndag";
+
+      days.push({ date, dayName, items, isWeekend });
+    }
+  }
+
+  return days;
+}
+
+function extractDayItems(
+  html: string,
+  date: string,
+  year: number
+): ScheduleItem[] {
+  const items: ScheduleItem[] = [];
+
+  // Extract regular schedule items
+  const scheduleBlockRegex =
+    /data-brikid='([^']+)'[^>]*data-tooltip='([^']*(?:\n[^']*)*?)'\s+data-menu-items/g;
+  let match;
+
+  while ((match = scheduleBlockRegex.exec(html)) !== null) {
+    const activityId = match[1];
+    const tooltip = match[2].replace(/''/g, "'");
+
+    if (!tooltip) continue;
+
+    const scheduleItem = parseTooltipContent(tooltip, activityId, year);
+    if (scheduleItem && scheduleItem.date.includes(date.split("/")[0])) {
+      items.push(scheduleItem);
+    }
+  }
+
+  // Extract info header events
+  const infoHeaderRegex =
+    /s2infoHeader[^>]*>[\s\S]*?data-tooltip='([^']*(?:''[^']*)*)'[\s\S]*?<\/td>/g;
+  while ((match = infoHeaderRegex.exec(html)) !== null) {
+    const tooltip = match[1].replace(/''/g, "'");
+    if (tooltip && (tooltip.includes("Frist") || tooltip.includes("dag"))) {
+      const eventItem = parseTooltipContent(tooltip, undefined, year);
+      if (eventItem && eventItem.date.includes(date.split("/")[0])) {
+        items.push(eventItem);
+      }
+    }
+  }
+
+  return items;
+}
+
+function extractStudentGroups(html: string) {
+  const subjects: string[] = [];
+  const involvedGroups: string[] = [];
+  const ownGroups: string[] = [];
+
+  const holdListRegex = /holdElementLinkList[\s\S]*?<\/table>/;
+  const holdMatch = html.match(holdListRegex);
+
+  if (holdMatch) {
+    const holdSection = holdMatch[0];
+    const linkRegex = /<a[^>]*>([^<]+)<\/a>/g;
+    let linkMatch;
+
+    while ((linkMatch = linkRegex.exec(holdSection)) !== null) {
+      const text = linkMatch[1].trim();
+      if (text && !text.includes("Hold:") && !text.includes("grupper:")) {
+        subjects.push(text);
+      }
+    }
+  }
+
+  return { subjects, involvedGroups, ownGroups };
+}
+
+function generateSummary(days: DaySchedule[]) {
+  let totalClasses = 0,
+    totalHomework = 0,
+    changedClasses = 0,
+    cancelledClasses = 0,
+    specialEvents = 0,
+    deadlines = 0;
+
+  days.forEach((day) => {
+    day.items.forEach((item) => {
+      if (item.type === "class") {
+        totalClasses++;
+        if (item.homework?.length) totalHomework += item.homework.length;
+        if (item.status === "changed") changedClasses++;
+        if (item.status === "cancelled") cancelledClasses++;
+      } else if (item.type === "event") {
+        specialEvents++;
+      } else if (item.type === "deadline") {
+        deadlines++;
+      }
+    });
+  });
+
+  return {
+    totalClasses,
+    totalHomework,
+    changedClasses,
+    cancelledClasses,
+    specialEvents,
+    deadlines,
+  };
+}
+
+/**
+ * Parse tooltip content into schedule item
+ */
+function parseTooltipContent(
+  tooltip: string,
+  activityId: string | undefined,
+  year: number
+): ScheduleItem | null {
+  try {
+    const lines = tooltip
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line);
+    if (lines.length === 0) return null;
+
+    let startTime = "";
+    let endTime = "";
+    let date = "";
+    let subject = "";
+    let teacher = "";
+    let teacherInitials = "";
+    let room = "";
+    let topic = "";
+
+    // Check if first line is a topic/title
+    if (
+      lines.length > 0 &&
+      !lines[0].includes("til") &&
+      !lines[0].includes("/") &&
+      !lines[0].includes("Hold:") &&
+      !lines[0].includes("Lærer:") &&
+      !lines[0].includes("Lokale:")
+    ) {
+      topic = lines[0];
+    }
+
+    for (const line of lines) {
+      // Parse time and date
+      const timeMatch = line.match(
+        /(\d+\/\d+-\d+)\s+(\d+:\d+)\s+til\s+(\d+:\d+)/
+      );
+      if (timeMatch) {
+        date = timeMatch[1];
+        startTime = timeMatch[2];
+        endTime = timeMatch[3];
+        continue;
+      }
+
+      // Handle "Hele dagen" events
+      if (line.includes("Hele dagen")) {
+        const dateMatch = lines.find((l) => l.match(/\d+\/\d+-\d+/));
+        if (dateMatch) {
+          const dm = dateMatch.match(/(\d+\/\d+-\d+)/);
+          if (dm) date = dm[1];
+        }
+        startTime = "08:00";
+        endTime = "17:00";
+        continue;
+      }
+
+      // Parse subject
+      if (line.startsWith("Hold:")) {
+        subject = line.replace("Hold:", "").trim();
+        continue;
+      }
+
+      // Parse teacher
+      const teacherMatch = line.match(/Lærer:\s*(.+?)\s*\((.+?)\)/);
+      if (teacherMatch) {
+        teacher = teacherMatch[1];
+        teacherInitials = teacherMatch[2];
+        continue;
+      }
+
+      // Parse room
+      if (line.startsWith("Lokale:")) {
+        room = line.replace("Lokale:", "").trim();
+        continue;
+      }
+    }
+
+    // If no subject found in tooltip, use topic as subject
+    if (!subject && topic) {
+      subject = topic;
+    }
+
+    // Skip if no essential data
+    if (!subject || (!startTime && !endTime)) {
+      return null;
+    }
+
+    // Determine module number based on start time
+    let module = 0;
+    if (startTime) {
+      const hour = parseInt(startTime.split(":")[0]);
+      if (hour < 10) module = 1;
+      else if (hour < 12) module = 2;
+      else if (hour < 14) module = 3;
+      else if (hour < 16) module = 4;
+      else module = 5;
+    }
+
+    // Determine type
+    let type: "class" | "event" | "deadline" = "class";
+    if (tooltip.includes("Frist") || tooltip.includes("deadline")) {
+      type = "deadline";
+    } else if (tooltip.includes("dag") && !subject.includes("1g")) {
+      type = "event";
+    }
+
+    // Parse homework if present
+    const homework: Homework[] = [];
+    const homeworkMatch = tooltip.match(/Lektier:[\s\S]*?(?=Note:|$)/);
+    if (homeworkMatch) {
+      const homeworkText = homeworkMatch[0];
+      const homeworkLines = homeworkText.split("\n").slice(1);
+      homeworkLines.forEach((line) => {
+        if (line.trim().startsWith("-")) {
+          homework.push({ description: line.trim().substring(1).trim() });
+        }
+      });
+    }
+
+    // Parse notes
+    const noteMatch = tooltip.match(/Note:\s*([\s\S]*?)$/);
+    const notes = noteMatch ? noteMatch[1].trim() : undefined;
+
+    return {
+      id: activityId,
+      activityId,
+      subject: { name: subject, code: subject },
+      teacher: { name: teacher, initials: teacherInitials },
+      room: { name: room },
+      startTime,
+      endTime,
+      date,
+      module,
+      status: "normal", // TODO: detect changed/cancelled from CSS classes
+      homework: homework.length > 0 ? homework : undefined,
+      notes,
+      title: type === "event" || type === "deadline" ? subject : undefined,
+      topic,
+      type,
+    };
+  } catch (err) {
+    console.error("Tooltip parse error:", err);
+    return null;
+  }
 }
 
 /** Main handler */
 export async function GET(req: Request): Promise<Response> {
+  const timer = new Timer();
+
   try {
+    timer.start("request-total");
+
+    timer.start("url-parsing");
     const url = new URL(req.url);
     const week = url.searchParams.get("week"); // optional ISO week number
     const gymId = url.searchParams.get("gymId");
+    timer.end("url-parsing");
+
+    timer.start("cookie-reading");
     const cookie = readCookie(req);
     const sessionCookieRaw = readSessionCookie(req);
+    timer.end("cookie-reading");
+
     if (!cookie) {
+      console.log(timer.getSummary());
       return json(
         {
           error:
@@ -133,9 +632,11 @@ export async function GET(req: Request): Promise<Response> {
     }
 
     if (!gymId) {
+      console.log(timer.getSummary());
       return json({ error: "Missing gymId." }, 400);
     }
 
+    timer.start("url-building");
     // If we have the session cookie, we also set the session cookie
     const sessionCookie = sessionCookieRaw
       ? `; ASP.NET_SessionId=${sessionCookieRaw}; isloggedin3=Y`
@@ -143,6 +644,9 @@ export async function GET(req: Request): Promise<Response> {
 
     // Build target URL and fetch
     const target = buildLectioUrl(week, gymId);
+    timer.end("url-building");
+
+    timer.start("lectio-fetch");
     const resp = await fetch(target, {
       method: "GET",
       headers: {
@@ -167,46 +671,58 @@ export async function GET(req: Request): Promise<Response> {
       // Tight timeouts via fetch options are limited in edge; rely on platform limits.
       redirect: "follow",
     });
+    const fetchTime = timer.end("lectio-fetch");
 
-    console.log("resp", resp.headers);
+    console.log(`🌐 LECTIO FETCH: ${fetchTime}ms - Status: ${resp.status}`);
 
+    timer.start("response-validation");
     // Handle auth redirect or errors
     if (resp.status === 302 || resp.status === 301) {
+      console.log(timer.getSummary());
       return json({ error: "Not authorized or session redirect." }, 401);
     }
     if (!resp.ok) {
+      console.log(timer.getSummary());
       return json({ error: `Upstream error ${resp.status}` }, 502);
     }
+    timer.end("response-validation");
 
+    timer.start("html-reading");
     const html = await resp.text();
+    timer.end("html-reading");
 
-    console.log("html", html);
+    console.log(`📄 HTML SIZE: ${html.length} characters`);
 
+    timer.start("auth-checks");
     // Quick auth check: Lectio login marker (adjust to real marker you see)
     if (/unilogin|log\s*ind/i.test(html)) {
+      console.log(timer.getSummary());
       return json({ error: "Session expired." }, 401);
     }
 
     // Check for robot detection
     if (/robot|captcha|anti-bot|bot-protection/i.test(html)) {
+      console.log(timer.getSummary());
       return json({ error: "Robot detection." }, 403);
     }
+    timer.end("auth-checks");
 
     const tz = "Europe/Copenhagen";
-    const periodsRaw = parseLectioSchedule(html, tz);
-    const periods = sanitizePeriods(periodsRaw).sort(
-      (a, b) => a.startEpochMs - b.startEpochMs
-    );
+    const schedule = parseLectioSchedule(html, tz, timer);
 
+    timer.start("response-building");
     // Build response + ETag
     const body: ScheduleResponse = {
-      periods,
-      nextHash: hash(JSON.stringify(periods.slice(0, 6))), // small stable hash
+      schedule,
+      nextHash: hash(JSON.stringify(schedule.summary)), // stable hash based on summary
       updatedAt: Date.now(),
     };
 
     const ifNoneMatch = req.headers.get("if-none-match");
     if (ifNoneMatch && ifNoneMatch.replace(/"/g, "") === body.nextHash) {
+      timer.end("response-building");
+      timer.end("request-total");
+      console.log(timer.getSummary());
       return new Response(null, {
         status: 304,
         headers: {
@@ -216,7 +732,7 @@ export async function GET(req: Request): Promise<Response> {
       });
     }
 
-    return new Response(JSON.stringify(body), {
+    const response = new Response(JSON.stringify(body), {
       status: 200,
       headers: {
         "content-type": "application/json; charset=utf-8",
@@ -224,7 +740,19 @@ export async function GET(req: Request): Promise<Response> {
         "Cache-Control": "no-store",
       },
     });
+    timer.end("response-building");
+    timer.end("request-total");
+
+    console.log(timer.getSummary());
+    console.log(
+      `📊 SCHEDULE STATS: ${schedule.summary.totalClasses} classes, ${schedule.days.length} days`
+    );
+
+    return response;
   } catch (err: any) {
+    timer.end("request-total");
+    console.log(timer.getSummary());
+
     // Don't leak internals, but provide helpful info for common issues
     const message = String(err?.message ?? "");
     console.error("error", err);

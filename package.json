@@ -3,9 +3,29 @@
   "type": "module",
   "dependencies": {
     "@vercel/edge": "^1.2.2",
-    "@vercel/node": "^5.3.13"
+    "@vercel/node": "^5.3.13",
+    "jsdom": "^23.0.0",
+    "@types/jsdom": "^21.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
-  }
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonbng/lectio-schedule-extrator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonbng/lectio-schedule-extrator/issues"
+  },
+  "homepage": "https://github.com/jonbng/lectio-schedule-extrator#readme"
 }

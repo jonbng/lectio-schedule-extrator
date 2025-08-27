@@ -1,0 +1,561 @@
+{
+  "weekNumber": 36,
+  "year": 2025,
+  "weekRange": "Uge 36 (1/9-7/9) 2025",
+  "student": {
+    "name": "Eleven Jonathan Arthur Hojer Bangert",
+    "class": "1g3"
+  },
+  "school": "Sorø Akademis Skole",
+  "days": [
+    {
+      "date": "1/9",
+      "dayName": "Mandag",
+      "items": [
+        {
+          "activityId": "ABS73519234455",
+          "subject": {
+            "name": "1g3 ap spr",
+            "code": "1g3 ap spr"
+          },
+          "teacher": {
+            "name": "Jørgen Grønlund",
+            "initials": "JG"
+          },
+          "room": {
+            "name": "23"
+          },
+          "startTime": "08:10",
+          "endTime": "09:50",
+          "date": "1/9-2025",
+          "module": 1,
+          "status": "normal",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519230287",
+          "subject": {
+            "name": "1g3 da",
+            "code": "1g3 da"
+          },
+          "teacher": {
+            "name": "Gitte Bjerreskov Storm",
+            "initials": "GS"
+          },
+          "room": {
+            "name": "23"
+          },
+          "startTime": "10:05",
+          "endTime": "11:45",
+          "date": "1/9-2025",
+          "module": 2,
+          "status": "normal",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519235036",
+          "subject": {
+            "name": "1g3 nv",
+            "code": "1g3 nv"
+          },
+          "teacher": {
+            "name": "Jakob Østerberg Meibom",
+            "initials": "JM"
+          },
+          "room": {
+            "name": "VC-Thomsen"
+          },
+          "startTime": "12:25",
+          "endTime": "14:05",
+          "date": "1/9-2025",
+          "module": 3,
+          "status": "normal",
+          "type": "class"
+        }
+      ],
+      "isWeekend": false
+    },
+    {
+      "date": "2/9",
+      "dayName": "Tirsdag",
+      "items": [
+        {
+          "activityId": "ABS73519232199",
+          "subject": {
+            "name": "1g3 nv",
+            "code": "1g3 nv"
+          },
+          "teacher": {
+            "name": "Jakob Østerberg Meibom",
+            "initials": "JM"
+          },
+          "room": {
+            "name": "VC-Thomsen"
+          },
+          "startTime": "08:10",
+          "endTime": "09:50",
+          "date": "2/9-2025",
+          "module": 1,
+          "status": "normal",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519232168",
+          "subject": {
+            "name": "ma-7",
+            "code": "ma-7"
+          },
+          "teacher": {
+            "name": "Peter Henrik Ørsøe Rasmussen",
+            "initials": "Pe"
+          },
+          "room": {
+            "name": "VC-Rømer"
+          },
+          "startTime": "10:05",
+          "endTime": "11:45",
+          "date": "2/9-2025",
+          "module": 2,
+          "status": "normal",
+          "homework": [
+            {
+              "description": "Besvar opgave 3.1 og 3.2 fra forrige gang: regneopgaver ligninger.docx (VINK:  Beslut hvad x skal stå for og opstil en ligning) [...]"
+            }
+          ],
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519232861",
+          "subject": {
+            "name": "1g3 ap la",
+            "code": "1g3 ap la"
+          },
+          "teacher": {
+            "name": "Allan Rosengren",
+            "initials": "AR"
+          },
+          "room": {
+            "name": "23"
+          },
+          "startTime": "12:25",
+          "endTime": "14:05",
+          "date": "2/9-2025",
+          "module": 3,
+          "status": "normal",
+          "type": "class"
+        }
+      ],
+      "isWeekend": false
+    },
+    {
+      "date": "3/9",
+      "dayName": "Onsdag",
+      "items": [
+        {
+          "activityId": "ABS73519234837",
+          "subject": {
+            "name": "1g3 en",
+            "code": "1g3 en"
+          },
+          "teacher": {
+            "name": "Anna Bjerre",
+            "initials": "AB"
+          },
+          "room": {
+            "name": "23"
+          },
+          "startTime": "08:10",
+          "endTime": "09:50",
+          "date": "3/9-2025",
+          "module": 1,
+          "status": "normal",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519233537",
+          "subject": {
+            "name": "1g3 da",
+            "code": "1g3 da"
+          },
+          "teacher": {
+            "name": "Gitte Bjerreskov Storm",
+            "initials": "GS"
+          },
+          "room": {
+            "name": "23"
+          },
+          "startTime": "10:05",
+          "endTime": "11:45",
+          "date": "3/9-2025",
+          "module": 2,
+          "status": "changed",
+          "topic": "Ændret!",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519234084",
+          "subject": {
+            "name": "1g3 nv",
+            "code": "1g3 nv"
+          },
+          "teacher": {
+            "name": "Martin Just Majlund",
+            "initials": "MJ"
+          },
+          "room": {
+            "name": "VC-Thomsen"
+          },
+          "startTime": "10:05",
+          "endTime": "11:45",
+          "date": "3/9-2025",
+          "module": 2,
+          "status": "cancelled",
+          "notes": "MJ Astra",
+          "topic": "Aflyst!",
+          "type": "class"
+        },
+        {
+          "title": "Frist semesterplaner 2-3g",
+          "subject": {
+            "name": "Frist semesterplaner 2-3g",
+            "code": "Frist semesterplaner 2-3g"
+          },
+          "teacher": {
+            "name": "",
+            "initials": ""
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "",
+          "endTime": "Hele dagen",
+          "date": "3/9-2025",
+          "module": 0,
+          "status": "normal",
+          "type": "deadline"
+        }
+      ],
+      "isWeekend": false
+    },
+    {
+      "date": "4/9",
+      "dayName": "Torsdag",
+      "items": [
+        {
+          "activityId": "ABS73526471026",
+          "subject": {
+            "name": "Alle 1. G. elever, Alle 2. G. elever, Alle 3. G. elever, Alle Lærere",
+            "code": "Alle 1. G. elever, Alle 2. G. elever, Alle 3. G. elever, Alle Lærere"
+          },
+          "teacher": {
+            "name": "",
+            "initials": ""
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "08:00",
+          "endTime": "13:00",
+          "date": "4/9-2025",
+          "module": 1,
+          "status": "normal",
+          "title": "Idrætsdag",
+          "topic": "Idrætsdag",
+          "type": "event"
+        },
+        {
+          "title": "Idrætsdag",
+          "subject": {
+            "name": "Idrætsdag",
+            "code": "Idrætsdag"
+          },
+          "teacher": {
+            "name": "",
+            "initials": ""
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "",
+          "endTime": "",
+          "date": "4/9-2025",
+          "module": 0,
+          "status": "normal",
+          "type": "event"
+        }
+      ],
+      "isWeekend": false
+    },
+    {
+      "date": "5/9",
+      "dayName": "Fredag",
+      "items": [
+        {
+          "activityId": "ABS73519233671",
+          "subject": {
+            "name": "1g3 sa",
+            "code": "1g3 sa"
+          },
+          "teacher": {
+            "name": "Poul-Erik Jørgensen",
+            "initials": "PJ"
+          },
+          "room": {
+            "name": "23"
+          },
+          "startTime": "08:10",
+          "endTime": "09:50",
+          "date": "5/9-2025",
+          "module": 1,
+          "status": "normal",
+          "homework": [
+            {
+              "description": "Vores Samfund 1.udg (Carlsen m.fl), 17-23"
+            }
+          ],
+          "topic": "Sociale klasser",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519232335",
+          "subject": {
+            "name": "1g3 id",
+            "code": "1g3 id"
+          },
+          "teacher": {
+            "name": "Jakob Østerberg Meibom",
+            "initials": "JM"
+          },
+          "room": {
+            "name": "HAL"
+          },
+          "startTime": "10:05",
+          "endTime": "11:45",
+          "date": "5/9-2025",
+          "module": 2,
+          "status": "normal",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS73519233093",
+          "subject": {
+            "name": "ma-7",
+            "code": "ma-7"
+          },
+          "teacher": {
+            "name": "Peter Henrik Ørsøe Rasmussen",
+            "initials": "Pe"
+          },
+          "room": {
+            "name": "AG1"
+          },
+          "startTime": "12:25",
+          "endTime": "14:05",
+          "date": "5/9-2025",
+          "module": 3,
+          "status": "changed",
+          "topic": "Ændret!",
+          "type": "class"
+        },
+        {
+          "activityId": "ABS74001101852",
+          "subject": {
+            "name": "1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26",
+            "code": "1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26"
+          },
+          "teacher": {
+            "name": "Akila Karunenthiran",
+            "initials": "AK"
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "17:00",
+          "endTime": "...",
+          "date": "5/9-2025",
+          "module": 5,
+          "status": "normal",
+          "topic": "Lukkeweekend  kosten",
+          "type": "event"
+        },
+        {
+          "title": "Lukkeweekend  kosten",
+          "subject": {
+            "name": "Lukkeweekend  kosten",
+            "code": "Lukkeweekend  kosten"
+          },
+          "teacher": {
+            "name": "",
+            "initials": ""
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "",
+          "endTime": "",
+          "date": "5/9-2025",
+          "module": 0,
+          "status": "normal",
+          "type": "event"
+        }
+      ],
+      "isWeekend": false
+    },
+    {
+      "date": "6/9",
+      "dayName": "Lørdag",
+      "items": [
+        {
+          "activityId": "ABS74001101852",
+          "subject": {
+            "name": "1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26",
+            "code": "1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26"
+          },
+          "teacher": {
+            "name": "Akila Karunenthiran",
+            "initials": "AK"
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "...",
+          "endTime": "...",
+          "date": "5/9-2025",
+          "module": 1,
+          "status": "normal",
+          "topic": "Lukkeweekend  kosten",
+          "type": "event"
+        },
+        {
+          "title": "Lukkeweekend  kosten",
+          "subject": {
+            "name": "Lukkeweekend  kosten",
+            "code": "Lukkeweekend  kosten"
+          },
+          "teacher": {
+            "name": "",
+            "initials": ""
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "",
+          "endTime": "",
+          "date": "5/9-2025",
+          "module": 0,
+          "status": "normal",
+          "type": "event"
+        }
+      ],
+      "isWeekend": true
+    },
+    {
+      "date": "7/9",
+      "dayName": "Søndag",
+      "items": [
+        {
+          "activityId": "ABS74001101852",
+          "subject": {
+            "name": "1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26",
+            "code": "1g kostelever 25/26, 2g kostelever 2025/26, 3g kostelever 25/26"
+          },
+          "teacher": {
+            "name": "Akila Karunenthiran",
+            "initials": "AK"
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "...",
+          "endTime": "17:00",
+          "date": "5/9-2025",
+          "module": 1,
+          "status": "normal",
+          "topic": "Lukkeweekend  kosten",
+          "type": "event"
+        },
+        {
+          "title": "Lukkeweekend  kosten",
+          "subject": {
+            "name": "Lukkeweekend  kosten",
+            "code": "Lukkeweekend  kosten"
+          },
+          "teacher": {
+            "name": "",
+            "initials": ""
+          },
+          "room": {
+            "name": ""
+          },
+          "startTime": "",
+          "endTime": "",
+          "date": "5/9-2025",
+          "module": 0,
+          "status": "normal",
+          "type": "event"
+        }
+      ],
+      "isWeekend": true
+    }
+  ],
+  "modules": [
+    {
+      "number": 1,
+      "name": "1. modul",
+      "timeRange": "8:10 - 9:50"
+    },
+    {
+      "number": 2,
+      "name": "2. modul",
+      "timeRange": "10:05 - 11:45"
+    },
+    {
+      "number": 3,
+      "name": "3. modul",
+      "timeRange": "12:25 - 14:05"
+    },
+    {
+      "number": 4,
+      "name": "4. modul",
+      "timeRange": "14:15 - 15:55"
+    },
+    {
+      "number": 5,
+      "name": "5. modul",
+      "timeRange": "16:05 - 17:45"
+    }
+  ],
+  "studentGroups": {
+    "subjects": [
+      "1g me 1",
+      "1g3 ap la",
+      "1g3 ap spr",
+      "1g3 da",
+      "1g3 en",
+      "1g3 id",
+      "1g3 kt",
+      "1g3 nv",
+      "1g3 sa",
+      "1g3 st ML",
+      "ma-7"
+    ],
+    "involvedGroups": [
+      "Alle 1. G. elever",
+      "Alle 1g3-elever"
+    ],
+    "ownGroups": [
+      "1g kostelever 25/26",
+      "Alle elever 25/26",
+      "alle kostelever 25/26",
+      "Ki Kostelever 1g"
+    ]
+  },
+  "summary": {
+    "totalClasses": 12,
+    "totalHomework": 2,
+    "changedClasses": 2,
+    "cancelledClasses": 1,
+    "specialEvents": 8,
+    "deadlines": 1
+  }
+}
