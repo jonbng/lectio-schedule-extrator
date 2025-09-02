@@ -630,7 +630,7 @@ export async function GET(req: Request): Promise<Response> {
     //     401
     //   );
     // }
-    const cookie = "";
+    const cookie = null;
 
     if (!gymId) {
       console.log(timer.getSummary());
