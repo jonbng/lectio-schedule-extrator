@@ -777,6 +777,23 @@ export async function GET(req: Request): Promise<Response> {
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "content-type": "application/json; charset=utf-8" },
+    headers: { "content-type": "application/json; charset=utf-8", "Access-Control-Allow-Origin": "*" },
+  });
+}
+
+// CORS
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+
+      "Access-Control-Allow-Credentials": "true",
+    },
   });
 }
