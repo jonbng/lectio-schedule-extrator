@@ -728,6 +728,7 @@ export async function GET(req: Request): Promise<Response> {
         headers: {
           ETag: `"${body.nextHash}"`,
           "Cache-Control": "no-store",
+          "Access-Control-Allow-Origin": "*",
         },
       });
     }
@@ -738,6 +739,7 @@ export async function GET(req: Request): Promise<Response> {
         "content-type": "application/json; charset=utf-8",
         ETag: `"${body.nextHash}"`,
         "Cache-Control": "no-store",
+        "Access-Control-Allow-Origin": "*",
       },
     });
     timer.end("response-building");
@@ -791,9 +793,9 @@ export function OPTIONS() {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, x-lectio-cookie, x-lectio-session",
-      "Access-Control-Allow-Credentials": "true",
-      "Vary": "Origin",
+      "Access-Control-Allow-Headers":
+        "Content-Type, Authorization, x-lectio-cookie, x-lectio-session",
+      "Access-Control-Max-Age": "86400", // Cache preflight for 24 hours
     },
   });
 }
