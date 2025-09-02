@@ -616,20 +616,21 @@ export async function GET(req: Request): Promise<Response> {
     timer.end("url-parsing");
 
     timer.start("cookie-reading");
-    const cookie = readCookie(req);
+    // const cookie = readCookie(req);
     const sessionCookieRaw = readSessionCookie(req);
     timer.end("cookie-reading");
 
-    if (!cookie) {
-      console.log(timer.getSummary());
-      return json(
-        {
-          error:
-            "Missing or invalid access token (cookie). Ensure cookie contains only printable ASCII characters.",
-        },
-        401
-      );
-    }
+    // if (!cookie) {
+    //   console.log(timer.getSummary());
+    //   return json(
+    //     {
+    //       error:
+    //         "Missing or invalid access token (cookie). Ensure cookie contains only printable ASCII characters.",
+    //     },
+    //     401
+    //   );
+    // }
+    const cookie = "";
 
     if (!gymId) {
       console.log(timer.getSummary());
@@ -639,8 +640,10 @@ export async function GET(req: Request): Promise<Response> {
     timer.start("url-building");
     // If we have the session cookie, we also set the session cookie
     const sessionCookie = sessionCookieRaw
-      ? `; ASP.NET_SessionId=${sessionCookieRaw}; isloggedin3=Y`
+      ? `ASP.NET_SessionId=${sessionCookieRaw}; isloggedin3=Y`
       : "";
+
+    const autologinCookie = cookie ? `autologinkeyV2=${cookie}; ` : "";
 
     // Build target URL and fetch
     const target = buildLectioUrl(week, gymId);
@@ -666,7 +669,7 @@ export async function GET(req: Request): Promise<Response> {
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1",
         TE: "trailers",
-        Cookie: `autologinkeyV2=${cookie};${sessionCookie}`,
+        Cookie: `${autologinCookie}${sessionCookie}`,
       },
       // Tight timeouts via fetch options are limited in edge; rely on platform limits.
       redirect: "follow",
