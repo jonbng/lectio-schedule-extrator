@@ -19,6 +19,7 @@ export default function Home() {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [cookie, setCookie] = useState<string | null>(null);
   const [gymId, setGymId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function Home() {
       fetch("https://lectio.jonathanb.dk/api?gymId=" + gymId, {
         headers: {
           // "Authorization": "Bearer " + sessionToken,
-          // "x-lectio-cookie": sessionToken ?? "",
+          // "x-lectio-cookie": cookie,
           "x-lectio-session": sessionToken,
         },
       })
@@ -38,7 +39,11 @@ export default function Home() {
             setIsLoading(false);
             return;
           }
-          setSchedule(data);
+          if (data.schedule && data.schedule.lessons) {
+            setSchedule(data.schedule);
+            setIsLoading(false);
+            return;
+          }
           setIsLoading(false);
         });
     }
@@ -49,16 +54,23 @@ export default function Home() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="text-xl font-extrabold flex flex-row gap-2 items-center">
           <span>Lectio Next</span>
-          <div className="flex flex-row gap-2 items-center">
+          <div className="flex flex-row gap-2 items-center ">
             <input
               type="text"
               placeholder="Session Token"
               value={sessionToken || ""}
               onChange={(e) => setSessionToken(e.target.value)}
             />
+            {/* <input 
+              type="text"
+              placeholder="Cookie"
+              value={cookie || ""}
+              onChange={(e) => setCookie(e.target.value)}
+            /> */}
             <input
               type="text"
               placeholder="Gym ID"
+              className="w-12"
               value={gymId || ""}
               onChange={(e) => setGymId(e.target.value)}
             />

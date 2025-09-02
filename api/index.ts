@@ -706,6 +706,7 @@ export async function GET(req: Request): Promise<Response> {
     // Check for robot detection
     if (/robot|captcha|anti-bot|bot-protection/i.test(html)) {
       console.log(timer.getSummary());
+      console.log(html);
       return json({ error: "Robot detection." }, 403);
     }
     timer.end("auth-checks");
