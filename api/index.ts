@@ -1,6 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const runtime = "edge";
 
+const UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
+
+const commonHeaders = {
+  "user-agent": UA,
+  accept:
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "accept-language": "da-DK,da;q=0.9,en-US;q=0.8,en;q=0.7",
+  "upgrade-insecure-requests": "1",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "navigate",
+  "sec-fetch-dest": "document",
+  "accept-encoding": "gzip, deflate, br", // make sure you can decode it
+};
+
 // Simple timing utility for debugging performance
 interface TimingRecord {
   name: string;
@@ -654,21 +669,11 @@ export async function GET(req: Request): Promise<Response> {
       method: "GET",
       headers: {
         // Be a polite client
-        "user-agent":
-          "Mozilla/5.0 (X11; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0",
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br, zstd",
-        "Accept-Language": "en-US,en;q=0.5",
         Connection: "keep-alive",
         "Sec-GPC": "1",
         DNT: "1",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "same-origin",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
         TE: "trailers",
+        ...commonHeaders,
         Cookie: `${autologinCookie}${sessionCookie}`,
       },
       // Tight timeouts via fetch options are limited in edge; rely on platform limits.
