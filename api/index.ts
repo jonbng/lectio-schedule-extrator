@@ -1,6 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const runtime = "edge";
 
+// Import types from the centralized types file
+import {
+  Teacher,
+  Room,
+  Subject,
+  Homework,
+  ScheduleItem,
+  DaySchedule,
+  WeekSchedule,
+  Module,
+  Student,
+  StudentGroups,
+  ScheduleSummary,
+  LectioScheduleResponse as ScheduleResponse,
+} from "../types/lectio";
+
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
 
@@ -67,88 +83,6 @@ class Timer {
     this.records = [];
   }
 }
-
-// Full schedule data types (exact same as schedule-extractor.ts)
-interface Teacher {
-  name: string;
-  initials: string;
-  id?: string;
-}
-
-interface Room {
-  name: string;
-}
-
-interface Subject {
-  name: string;
-  code: string;
-  id?: string;
-}
-
-interface Homework {
-  description: string;
-}
-
-interface ScheduleItem {
-  id?: string;
-  activityId?: string;
-  subject: Subject;
-  teacher: Teacher;
-  room: Room;
-  startTime: string;
-  endTime: string;
-  date: string;
-  module: number;
-  status: "normal" | "changed" | "cancelled";
-  homework?: Homework[];
-  notes?: string;
-  title?: string;
-  topic?: string;
-  type: "class" | "event" | "deadline";
-}
-
-interface DaySchedule {
-  date: string;
-  dayName: string;
-  items: ScheduleItem[];
-  isWeekend?: boolean;
-}
-
-interface WeekSchedule {
-  weekNumber: number;
-  year: number;
-  weekRange: string;
-  student: {
-    name: string;
-    class: string;
-  };
-  school: string;
-  days: DaySchedule[];
-  modules: {
-    number: number;
-    name: string;
-    timeRange: string;
-  }[];
-  studentGroups: {
-    subjects: string[];
-    involvedGroups: string[];
-    ownGroups: string[];
-  };
-  summary: {
-    totalClasses: number;
-    totalHomework: number;
-    changedClasses: number;
-    cancelledClasses: number;
-    specialEvents: number;
-    deadlines: number;
-  };
-}
-
-type ScheduleResponse = {
-  schedule: WeekSchedule;
-  nextHash: string;
-  updatedAt: number;
-};
 
 const LECTIO_BASE = "https://www.lectio.dk";
 
@@ -333,17 +267,26 @@ function extractModules(html: string) {
 
 function extractDays(html: string, year: number): DaySchedule[] {
   const days: DaySchedule[] = [];
-  const dayHeaderRegex = /s2dayHeader[^>]*>[\s\S]*?<td[^>]*>([^<]+)<\/td>/g;
-  const dayColumnRegex = /data-date="([^"]+)"[\s\S]*?<\/td>/g;
+
+  // First, find the s2dayHeader row and extract all day headers from it
+  const dayHeaderRowRegex =
+    /<tr[^>]*class="s2dayHeader[^"]*"[^>]*>([\s\S]*?)<\/tr>/;
+  const dayHeaderRowMatch = html.match(dayHeaderRowRegex);
 
   const dayHeaders: string[] = [];
-  let match;
 
-  // Extract day headers
-  while ((match = dayHeaderRegex.exec(html)) !== null) {
-    const dayText = match[1].trim();
-    if (dayText && !dayText.includes("Modul")) {
-      dayHeaders.push(dayText);
+  if (dayHeaderRowMatch) {
+    const dayHeaderRow = dayHeaderRowMatch[1];
+    // Extract all <td> elements within the day header row
+    const tdRegex = /<td[^>]*>([^<]+)<\/td>/g;
+    let match;
+
+    while ((match = tdRegex.exec(dayHeaderRow)) !== null) {
+      const dayText = match[1].trim();
+      // Skip empty cells and module headers
+      if (dayText && !dayText.includes("Modul") && dayText !== "") {
+        dayHeaders.push(dayText);
+      }
     }
   }
 
